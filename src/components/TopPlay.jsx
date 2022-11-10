@@ -11,7 +11,7 @@ import { useGetTopChartsQuery } from '../redux/services/shazamCore';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 
-const TopChartCard = ({ song, i }) => (
+const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handlePlayClick }) => (
   <div className="w-full flex flex-row items-center hover:bg-
   [#4c426e] py-2 p-4 rounded-lg cursor-pointer mb-2">
     <h3 className="fot-bold text-base text-white mr-3">{i + 1}</h3>
@@ -26,6 +26,12 @@ const TopChartCard = ({ song, i }) => (
         </Link>
       </div>
     </div>
+    <PlayPause
+    isPlaying={isPlaying}
+    activeSong={activeSong}
+    song={song}
+    handlePause={handlePauseClick}
+    handlePlay={handlePlayClick} />
   </div>
 )
 
@@ -46,7 +52,7 @@ const TopPlay = () => {
     dispatch(playPause(false));
   };
 
-  const handlePlayClick = () => {
+  const handlePlayClick = (song, i) => {
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
   };
@@ -69,12 +75,16 @@ const TopPlay = () => {
             <TopChartCard
               key={song.key}
               song={song}
-              i={i} />
+              i={i}
+              isPlaying={isPlaying}
+              activeSong={activeSong}
+              handlePauseClick={handlePauseClick}
+              handlePlayClick={() => handlePlayClick(song, i)} />
           ))}
         </div>
       </div>
 
-      <div>
+      <div className="w-full flex flex-col mt-8">
         <div className="flex flex-row justify-between items-center">
           <h2 className="text-white font-bold text-2xl">Top Artists</h2>
           <Link to="/top-artists">
